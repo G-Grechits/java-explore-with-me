@@ -24,8 +24,8 @@ public class HitClient extends BaseClient {
         );
     }
 
-    public ResponseEntity<Object> getStats(String start, String end, List<String> uris, Boolean unique) {
-        String path = "/stats?start={start}&end={end}&uris={uris}&unique={unique}";
+    public ResponseEntity<Object> getEventViews(String start, String end, List<String> uris, Boolean unique) {
+        String path = "/views?start={start}&end={end}&uris={uris}&unique={unique}";
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(uris.get(0));
         if (uris.size() > 1) {

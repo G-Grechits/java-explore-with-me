@@ -1,4 +1,4 @@
-package ru.practicum.service.publicAPI;
+package ru.practicum.service.publicService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;

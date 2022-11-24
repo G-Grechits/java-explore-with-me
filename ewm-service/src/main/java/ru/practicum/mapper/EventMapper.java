@@ -18,18 +18,18 @@ public class EventMapper {
                 eventDto.getRequestModeration(), State.PENDING);
     }
 
-    public static EventFullDto toEventFullDto(Event event) {
+    public static EventFullDto toEventFullDto(Event event, int views, int confirmedRequests) {
         return new EventFullDto(event.getId(), event.getTitle(), event.getAnnotation(), event.getDescription(),
                 CategoryMapper.toCategoryDto(event.getCategory()), DateTimeMapper.toString(event.getCreatedOn()),
                 event.getPublishedOn() != null ? DateTimeMapper.toString(event.getPublishedOn()) : null,
                 DateTimeMapper.toString(event.getEventDate()), UserMapper.toUserShortDto(event.getInitiator()),
-                event.getLocation(), event.getPaid(), null, event.getRequestModeration(), event.getState().name(),
-                null, null);
+                event.getLocation(), event.getPaid(), event.getParticipantLimit(), event.getRequestModeration(),
+                event.getState().name(), views, confirmedRequests);
     }
 
-    public static EventShortDto toEventShortDto(Event event) {
+    public static EventShortDto toEventShortDto(Event event, int views, int confirmedRequests) {
         return new EventShortDto(event.getId(), event.getTitle(), event.getAnnotation(),
                 CategoryMapper.toCategoryDto(event.getCategory()), DateTimeMapper.toString(event.getEventDate()),
-                UserMapper.toUserShortDto(event.getInitiator()), event.getPaid(), null, null);
+                UserMapper.toUserShortDto(event.getInitiator()), event.getPaid(), views, confirmedRequests);
     }
 }

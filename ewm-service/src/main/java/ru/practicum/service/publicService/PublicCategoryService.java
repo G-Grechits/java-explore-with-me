@@ -1,4 +1,4 @@
-package ru.practicum.service.publicAPI;
+package ru.practicum.service.publicService;
 
 import ru.practicum.dto.CategoryDto;
 

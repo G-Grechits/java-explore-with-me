@@ -3,10 +3,10 @@ package ru.practicum.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.List;
+
 @Getter
 @AllArgsConstructor
-public class ViewStats {
-    private String app;
-    private String uri;
-    private Integer hits;
+public class EventViews {
+    private List<ViewStats> views;
 }

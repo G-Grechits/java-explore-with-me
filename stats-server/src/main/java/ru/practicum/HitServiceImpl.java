@@ -3,6 +3,7 @@ package ru.practicum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.dto.EndpointHit;
+import ru.practicum.dto.EventViews;
 import ru.practicum.dto.ViewStats;
 import ru.practicum.mapper.DateTimeMapper;
 import ru.practicum.mapper.HitMapper;
@@ -36,5 +37,11 @@ public class HitServiceImpl implements HitService {
     public EndpointHit saveStats(EndpointHit endpointHit) {
         Hit hit = HitMapper.toHit(endpointHit);
         return HitMapper.toEndpointHit(hitRepository.save(hit));
+    }
+
+    @Override
+    public EventViews getEventViews(String start, String end, List<String> uris, Boolean unique) {
+        List<ViewStats> viewStats = getStats(start, end, uris, unique);
+        return new EventViews(viewStats);
     }
 }
