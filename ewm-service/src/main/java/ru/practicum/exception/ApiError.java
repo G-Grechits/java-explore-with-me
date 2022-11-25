@@ -1,14 +1,12 @@
 package ru.practicum.exception;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
 
 import java.util.List;
 
 @Getter
-@Setter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class ApiError {
     private List<Error> errors;
     private String message;

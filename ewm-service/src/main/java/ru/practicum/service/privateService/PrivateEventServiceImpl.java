@@ -141,7 +141,7 @@ public class PrivateEventServiceImpl implements PrivateEventService {
         if (request.getEvent().getInitiator().getId() != userId) {
             throw new ForbiddenException("Отклонить заявку на участие может только инициатор события.");
         }
-        request.setStatus(State.CANCELED);
+        request.setStatus(State.REJECTED);
         return RequestMapper.toParticipationRequestDto(requestRepository.save(request));
     }
 

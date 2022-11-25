@@ -18,6 +18,7 @@ import ru.practicum.repository.EventRepository;
 import ru.practicum.service.EventStatsService;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,7 +34,8 @@ public class AdminEventServiceImpl implements AdminEventService {
                                         String rangeEnd, int from, int size) {
         Pageable pageable = PageRequest.of(from / size, size);
         List<Event> events = eventRepository.findAllByInitiatorIdInAndStateInAndCategoryIdInAndEventDateBetween(users,
-                states, categories, rangeStart != null ? DateTimeMapper.toLocalDateTime(rangeStart) : null,
+                states != null ? states : new ArrayList<>(), categories,
+                rangeStart != null ? DateTimeMapper.toLocalDateTime(rangeStart) : null,
                 rangeEnd != null ? DateTimeMapper.toLocalDateTime(rangeEnd) : null, pageable);
         return events.stream()
                 .map(e -> EventMapper.toEventFullDto(
