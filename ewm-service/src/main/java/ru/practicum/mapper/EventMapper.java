@@ -4,15 +4,17 @@ import ru.practicum.State;
 import ru.practicum.dto.EventFullDto;
 import ru.practicum.dto.EventShortDto;
 import ru.practicum.dto.NewEventDto;
+import ru.practicum.entity.Category;
 import ru.practicum.entity.Event;
+import ru.practicum.entity.User;
 
 import java.time.LocalDateTime;
 
 public class EventMapper {
 
-    public static Event toEvent(NewEventDto eventDto) {
-        return new Event(null, eventDto.getTitle(), eventDto.getAnnotation(), eventDto.getDescription(), null,
-                LocalDateTime.now(), null, DateTimeMapper.toLocalDateTime(eventDto.getEventDate()), null,
+    public static Event toEvent(NewEventDto eventDto, Category category, User initiator) {
+        return new Event(null, eventDto.getTitle(), eventDto.getAnnotation(), eventDto.getDescription(), category,
+                LocalDateTime.now(), null, DateTimeMapper.toLocalDateTime(eventDto.getEventDate()), initiator,
                 eventDto.getLocation(), eventDto.getPaid(),
                 eventDto.getParticipantLimit() != null ? eventDto.getParticipantLimit() : 0,
                 eventDto.getRequestModeration(), State.PENDING);

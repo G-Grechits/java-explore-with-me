@@ -69,7 +69,7 @@ public class AdminEventServiceImpl implements AdminEventService {
     public EventFullDto publishEvent(long id) {
         Event event = getEventFromRepository(id);
         if (event.getEventDate().minusHours(1).isBefore(LocalDateTime.now())) {
-            throw new ValidationException("Дата начала события должна быть не ранее чем за час от даты публикации.");
+            throw new ValidationException("Дата начала события должна быть не ранее, чем за час от даты публикации.");
         }
         if (!event.getState().equals(State.PENDING)) {
             throw new ValidationException("Событие должно быть в состоянии ожидания публикации.");

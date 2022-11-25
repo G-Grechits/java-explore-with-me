@@ -21,7 +21,7 @@ public class NewEventDto {
     @Length(min = 20, max = 7000)
     private String description;
     @NotNull
-    private Integer category;
+    private Long category;
     @NotBlank
     private String eventDate;
     @NotNull

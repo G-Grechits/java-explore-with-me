@@ -4,9 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.NotNull;
+
 @Getter
 @AllArgsConstructor
 public class UpdateEventRequest {
+    @NotNull
     private Long eventId;
     @Length(min = 3, max = 120)
     private String title;
