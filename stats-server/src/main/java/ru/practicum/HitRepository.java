@@ -10,9 +10,11 @@ public interface HitRepository extends JpaRepository<Hit, Long> {
 
     List<Hit> findAllByTimestampBetweenAndUriIn(LocalDateTime start, LocalDateTime end, List<String> uris);
 
-    @Query("select count(ip) from Hit where uri = ?1")
+    @Query("SELECT count(ip) FROM Hit " +
+            "WHERE uri = ?1")
     Integer findHitCountByUri(String uri);
 
-    @Query("select count(distinct ip) from Hit where uri = ?1")
+    @Query("SELECT count(DISTINCT ip) FROM Hit " +
+            "WHERE uri = ?1")
     Integer findHitCountByUriWithUniqueIp(String uri);
 }

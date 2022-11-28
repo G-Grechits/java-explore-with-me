@@ -2,6 +2,8 @@ package ru.practicum.repository;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import ru.practicum.State;
 import ru.practicum.entity.Event;
 
@@ -15,10 +17,13 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             List<Long> initiatorIds, List<State> states, List<Long> categoryIds, LocalDateTime start, LocalDateTime end,
             Pageable pageable);
 
-    List<Event>
-    findAllByAnnotationContainingIgnoreCaseOrDescriptionContainingIgnoreCaseAndCategoryIdInAndPaidAndEventDateBetween(
-            String annotation, String description, List<Long> categoryIds, Boolean paid, LocalDateTime start,
-            LocalDateTime end, Pageable pageable);
+    @Query("SELECT e FROM Event AS e " +
+            "WHERE e.annotation like %:text% OR e.description like %:text% " +
+            "  AND e.category.id in :categories " +
+            "  AND e.paid = :paid " +
+            "  AND e.eventDate BETWEEN :start AND :end")
+    List<Event> findAllByParams(@Param("text") String text, List<Long> categories, Boolean paid, LocalDateTime start,
+                                LocalDateTime end, Pageable pageable);
 
     List<Event> findAllByCategoryId(long categoryId);
 

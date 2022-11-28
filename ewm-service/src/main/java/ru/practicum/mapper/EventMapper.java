@@ -21,12 +21,12 @@ public class EventMapper {
     }
 
     public static EventFullDto toEventFullDto(Event event, int views, int confirmedRequests) {
-        return new EventFullDto(event.getId(), event.getTitle(), event.getAnnotation(), event.getDescription(),
-                CategoryMapper.toCategoryDto(event.getCategory()), DateTimeMapper.toString(event.getCreatedOn()),
+        return new EventFullDto(event.getId(), event.getTitle(), event.getAnnotation(),
+                CategoryMapper.toCategoryDto(event.getCategory()), DateTimeMapper.toString(event.getEventDate()),
+                UserMapper.toUserShortDto(event.getInitiator()), event.getPaid(), views, confirmedRequests,
+                event.getDescription(), DateTimeMapper.toString(event.getCreatedOn()),
                 event.getPublishedOn() != null ? DateTimeMapper.toString(event.getPublishedOn()) : null,
-                DateTimeMapper.toString(event.getEventDate()), UserMapper.toUserShortDto(event.getInitiator()),
-                event.getLocation(), event.getPaid(), event.getParticipantLimit(), event.getRequestModeration(),
-                event.getState().name(), views, confirmedRequests);
+                event.getLocation(), event.getParticipantLimit(), event.getRequestModeration(), event.getState().name());
     }
 
     public static EventShortDto toEventShortDto(Event event, int views, int confirmedRequests) {

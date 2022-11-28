@@ -18,10 +18,13 @@ public class Compilation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(nullable = false)
     private String title;
+
     @Column(nullable = false)
     private Boolean pinned;
+
     @ManyToMany
     @JoinTable(name = "event_compilations",
             joinColumns = { @JoinColumn(name = "compilation_id") },
