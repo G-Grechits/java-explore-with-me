@@ -13,23 +13,27 @@ import ru.practicum.repository.CategoryRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ru.practicum.mapper.CategoryMapper.toCategoryDto;
+
 @Service
 @RequiredArgsConstructor
 public class PublicCategoryServiceImpl implements PublicCategoryService {
     private final CategoryRepository categoryRepository;
 
     @Override
-    public List<CategoryDto> getAllCategories(int from, int size) {
+    public List<CategoryDto> getAll(int from, int size) {
         Pageable pageable = PageRequest.of(from / size, size);
+
         return categoryRepository.findAll(pageable).stream()
                 .map(CategoryMapper::toCategoryDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public CategoryDto getCategoryById(long id) {
+    public CategoryDto getById(long id) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(String.format("Категория с ID = %d не найдена.", id)));
-        return CategoryMapper.toCategoryDto(category);
+
+        return toCategoryDto(category);
     }
 }

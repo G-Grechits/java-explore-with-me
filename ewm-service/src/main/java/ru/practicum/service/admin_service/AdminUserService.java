@@ -6,11 +6,11 @@ import java.util.List;
 
 public interface AdminUserService {
 
-    List<UserDto> getAllUsers(int from, int size);
+    List<UserDto> getAll(int from, int size);
 
-    List<UserDto> getUsersByIds(List<Long> ids);
+    List<UserDto> getByIds(List<Long> ids);
 
-    UserDto createUser(UserDto userDto);
+    UserDto create(UserDto userDto);
 
-    void deleteUser(long id);
+    void delete(long id);
 }

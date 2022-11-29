@@ -4,9 +4,9 @@ import ru.practicum.dto.CategoryDto;
 
 public interface AdminCategoryService {
 
-    CategoryDto createCategory(CategoryDto categoryDto);
+    CategoryDto create(CategoryDto categoryDto);
 
-    CategoryDto updateCategory(CategoryDto categoryDto);
+    CategoryDto update(CategoryDto categoryDto);
 
-    void deleteCategory(long id);
+    void delete(long id);
 }

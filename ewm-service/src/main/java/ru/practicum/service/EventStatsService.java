@@ -9,11 +9,12 @@ import ru.practicum.client.HitClient;
 import ru.practicum.dto.EventViews;
 import ru.practicum.dto.ViewStats;
 import ru.practicum.entity.Request;
-import ru.practicum.mapper.DateTimeMapper;
 import ru.practicum.repository.RequestRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
+import static ru.practicum.mapper.DateTimeMapper.toTextDateTime;
 
 @Component
 @RequiredArgsConstructor
@@ -25,8 +26,8 @@ public class EventStatsService {
     public Integer getViews(long id) {
         int views = 0;
         String uri = "/events/" + id;
-        ResponseEntity<Object> responseEntity = client.getEventViews(DateTimeMapper.toString(LocalDateTime.now().minusYears(1)),
-                DateTimeMapper.toString(LocalDateTime.now()), List.of(uri), false);
+        ResponseEntity<Object> responseEntity = client.getEventViews(toTextDateTime(LocalDateTime.now().minusYears(1)),
+                toTextDateTime(LocalDateTime.now()), List.of(uri), false);
         if (responseEntity.getStatusCode().is2xxSuccessful()) {
             String response = gson.toJson(responseEntity.getBody());
             EventViews eventViews = gson.fromJson(response, EventViews.class);

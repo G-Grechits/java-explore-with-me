@@ -8,9 +8,9 @@ import java.util.List;
 
 public interface PublicEventService {
 
-    List<EventShortDto> getEvents(String text, List<Long> categories, Boolean paid, String rangeStart,
-                                     String rangeEnd, Boolean onlyAvailable, String sort, int from, int size,
-                                     HttpServletRequest request);
+    List<EventShortDto> get(String text, List<Long> categories, Boolean paid, String rangeStart,
+                            String rangeEnd, Boolean onlyAvailable, String sort, int from, int size,
+                            HttpServletRequest request);
 
-    EventFullDto getEventById(long id, HttpServletRequest request);
+    EventFullDto getById(long id, HttpServletRequest request);
 }

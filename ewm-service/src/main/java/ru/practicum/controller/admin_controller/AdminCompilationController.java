@@ -18,8 +18,9 @@ public class AdminCompilationController {
 
     @PostMapping
     public CompilationDto createCompilation(@RequestBody @Valid NewCompilationDto compilationDto) {
-        CompilationDto createdCompilation = compilationService.createCompilation(compilationDto);
+        CompilationDto createdCompilation = compilationService.create(compilationDto);
         log.info("Добавлена подборка '{}'.", createdCompilation.getTitle());
+
         return createdCompilation;
     }
 
@@ -31,13 +32,13 @@ public class AdminCompilationController {
 
     @PatchMapping("/{compId}/pin")
     public void pinCompilation(@PathVariable long compId) {
-        compilationService.pinCompilation(compId);
+        compilationService.pin(compId);
         log.info("Подборка событий с ID = {} закреплена на главной странице.", compId);
     }
 
     @DeleteMapping("/{compId}/pin")
     public void unpinCompilation(@PathVariable long compId) {
-        compilationService.unpinCompilation(compId);
+        compilationService.unpin(compId);
         log.info("Подборка событий с ID = {} откреплена на главной странице.", compId);
     }
 
@@ -49,7 +50,7 @@ public class AdminCompilationController {
 
     @DeleteMapping("/{compId}")
     public void deleteCompilation(@PathVariable long compId) {
-        compilationService.deleteCompilation(compId);
+        compilationService.delete(compId);
         log.info("Подборка событий с ID = {} удалена.", compId);
     }
 }

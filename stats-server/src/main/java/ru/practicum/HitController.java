@@ -22,6 +22,7 @@ public class HitController {
                                     @RequestParam(defaultValue = "false") Boolean unique) {
         List<ViewStats> viewStats = hitService.getStats(start, end, uris, unique);
         log.info("Получена статистика по посещениям.");
+
         return viewStats;
     }
 
@@ -29,6 +30,7 @@ public class HitController {
     public EndpointHit saveStats(@RequestBody EndpointHit endpointHit) {
         EndpointHit savedEndpointHit = hitService.saveStats(endpointHit);
         log.info("Информация о запросе к эндпоинту '{}' сохранена.", savedEndpointHit.getUri());
+
         return savedEndpointHit;
     }
 
@@ -38,6 +40,7 @@ public class HitController {
                                     @RequestParam(defaultValue = "false") Boolean unique) {
         EventViews eventViews = hitService.getEventViews(start, end, uris, unique);
         log.info("Получена статистика по просмотрам событий.");
+
         return eventViews;
     }
 }

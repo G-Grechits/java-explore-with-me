@@ -6,15 +6,15 @@ import java.util.List;
 
 public interface PrivateEventService {
 
-    List<EventShortDto> getEvents(long userId, int from, int size);
+    List<EventShortDto> get(long userId, int from, int size);
 
-    EventFullDto getEventById(long id, long userId);
+    EventFullDto getById(long id, long userId);
 
-    EventFullDto createEvent(long userId, NewEventDto eventDto);
+    EventFullDto create(long userId, NewEventDto eventDto);
 
-    EventFullDto updateEvent(long userId, UpdateEventRequest eventDto);
+    EventFullDto update(long userId, UpdateEventRequest eventDto);
 
-    EventFullDto cancelEvent(long id, long userId);
+    EventFullDto cancel(long id, long userId);
 
     List<ParticipationRequestDto> getEventRequests(long id, long userId);
 

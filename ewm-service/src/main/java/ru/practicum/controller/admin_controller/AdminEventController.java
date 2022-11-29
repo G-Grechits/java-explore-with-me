@@ -26,29 +26,33 @@ public class AdminEventController {
                                         @RequestParam(required = false) String rangeEnd,
                                         @RequestParam(defaultValue = "0") int from,
                                         @RequestParam(defaultValue = "10") int size) {
-        List<EventFullDto> events = eventService.getEvents(users, states, categories, rangeStart, rangeEnd, from, size);
+        List<EventFullDto> events = eventService.get(users, states, categories, rangeStart, rangeEnd, from, size);
         log.info("Получен список событий.");
+
         return events;
     }
 
     @PutMapping("/{eventId}")
     public EventFullDto updateEvent(@PathVariable long eventId, @RequestBody @Valid AdminUpdateEventRequest event) {
-        EventFullDto updatedEvent = eventService.updateEvent(eventId, event);
+        EventFullDto updatedEvent = eventService.update(eventId, event);
         log.info("Данные события '{}' обновлены.", updatedEvent.getTitle());
+
         return updatedEvent;
     }
 
     @PatchMapping("/{eventId}/publish")
     public EventFullDto publishEvent(@PathVariable long eventId) {
-        EventFullDto publishedEvent = eventService.publishEvent(eventId);
+        EventFullDto publishedEvent = eventService.publish(eventId);
         log.info("Событие '{}' опубликовано.", publishedEvent.getTitle());
+
         return publishedEvent;
     }
 
     @PatchMapping("/{eventId}/reject")
     public EventFullDto rejectEvent(@PathVariable long eventId) {
-        EventFullDto rejectedEvent = eventService.rejectEvent(eventId);
+        EventFullDto rejectedEvent = eventService.reject(eventId);
         log.info("Событие '{}' отклонено.", rejectedEvent.getTitle());
+
         return rejectedEvent;
     }
 }

@@ -17,25 +17,14 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiError handleValidationException(final ValidationException e) {
-        log.error("Возникла ошибка 400: {}", e.getMessage(), e);
-        return ApiError.builder()
-                .message(e.getMessage())
-                .reason("Условия выполнения операции не соблюдены.")
-                .status(HttpStatus.BAD_REQUEST.toString())
-                .timestamp(DateTimeMapper.toString(LocalDateTime.now()))
-                .build();
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiError handleMissingParameterException(final MissingServletRequestParameterException e) {
         log.error("Возникла ошибка 400: {}", e.getMessage(), e);
+
         return ApiError.builder()
                 .message(e.getMessage())
                 .reason("Условия выполнения операции не соблюдены.")
                 .status(HttpStatus.BAD_REQUEST.toString())
-                .timestamp(DateTimeMapper.toString(LocalDateTime.now()))
+                .timestamp(DateTimeMapper.toTextDateTime(LocalDateTime.now()))
                 .build();
     }
 
@@ -43,23 +32,38 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiError handleArgumentNotValidException(final MethodArgumentNotValidException e) {
         log.error("Возникла ошибка 400: {}", e.getMessage(), e);
+
         return ApiError.builder()
                 .message(e.getMessage())
                 .reason("Условия выполнения операции не соблюдены.")
                 .status(HttpStatus.BAD_REQUEST.toString())
-                .timestamp(DateTimeMapper.toString(LocalDateTime.now()))
+                .timestamp(DateTimeMapper.toTextDateTime(LocalDateTime.now()))
                 .build();
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ApiError handleForbiddenException(final ForbiddenException e) {
-        log.error("Возникла ошибка 403: {}", e.getMessage(), e);
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiError handleValidationException(final ValidationException e) {
+        log.error("Возникла ошибка 400: {}", e.getMessage(), e);
+
         return ApiError.builder()
                 .message(e.getMessage())
                 .reason("Условия выполнения операции не соблюдены.")
-                .status(HttpStatus.FORBIDDEN.toString())
-                .timestamp(DateTimeMapper.toString(LocalDateTime.now()))
+                .status(HttpStatus.BAD_REQUEST.toString())
+                .timestamp(DateTimeMapper.toTextDateTime(LocalDateTime.now()))
+                .build();
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiError handleBadRequestException(final BadRequestException e) {
+        log.error("Возникла ошибка 400: {}", e.getMessage(), e);
+
+        return ApiError.builder()
+                .message(e.getMessage())
+                .reason("Условия выполнения операции не соблюдены.")
+                .status(HttpStatus.BAD_REQUEST.toString())
+                .timestamp(DateTimeMapper.toTextDateTime(LocalDateTime.now()))
                 .build();
     }
 
@@ -67,11 +71,12 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ApiError handleNotFoundException(final NotFoundException e) {
         log.error("Возникла ошибка 404: {}", e.getMessage(), e);
+
         return ApiError.builder()
                 .message(e.getMessage())
                 .reason("Запрашиваемый объект не найден.")
                 .status(HttpStatus.NOT_FOUND.toString())
-                .timestamp(DateTimeMapper.toString(LocalDateTime.now()))
+                .timestamp(DateTimeMapper.toTextDateTime(LocalDateTime.now()))
                 .build();
     }
 
@@ -79,11 +84,12 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.CONFLICT)
     public ApiError handleConflictException(final ConflictException e) {
         log.error("Возникла ошибка 409: {}", e.getMessage(), e);
+
         return ApiError.builder()
                 .message(e.getMessage())
                 .reason("Запрос приводит к нарушению целостности данных.")
                 .status(HttpStatus.CONFLICT.toString())
-                .timestamp(DateTimeMapper.toString(LocalDateTime.now()))
+                .timestamp(DateTimeMapper.toTextDateTime(LocalDateTime.now()))
                 .build();
     }
 
@@ -91,11 +97,12 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ApiError handleThrowable(final Throwable e) {
         log.error("Возникла непредвиденная ошибка: {}", e.getMessage(), e);
+
         return ApiError.builder()
                 .message(e.getMessage())
                 .reason("Внутренняя ошибка сервера.")
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.toString())
-                .timestamp(DateTimeMapper.toString(LocalDateTime.now()))
+                .timestamp(DateTimeMapper.toTextDateTime(LocalDateTime.now()))
                 .build();
     }
 }

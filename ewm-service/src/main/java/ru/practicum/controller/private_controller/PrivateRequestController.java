@@ -17,22 +17,25 @@ public class PrivateRequestController {
 
     @GetMapping
     public List<ParticipationRequestDto> getRequests(@PathVariable long userId) {
-        List<ParticipationRequestDto> requests = requestService.getRequests(userId);
+        List<ParticipationRequestDto> requests = requestService.get(userId);
         log.info("Получен список заявок на участие.");
+
         return requests;
     }
 
     @PostMapping
     public ParticipationRequestDto createRequest(@PathVariable long userId, @RequestParam long eventId) {
-        ParticipationRequestDto createdRequest = requestService.createRequest(userId, eventId);
+        ParticipationRequestDto createdRequest = requestService.create(userId, eventId);
         log.info("Заявка на участие в событии добавлена.");
+
         return createdRequest;
     }
 
     @PatchMapping("/{requestId}/cancel")
     public ParticipationRequestDto cancelRequest(@PathVariable long userId, @PathVariable long requestId) {
-        ParticipationRequestDto cancelledRequest = requestService.cancelRequest(userId, requestId);
+        ParticipationRequestDto cancelledRequest = requestService.cancel(userId, requestId);
         log.info("Заявка на участие в событии отозвана.");
+
         return cancelledRequest;
     }
 }

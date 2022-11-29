@@ -10,7 +10,7 @@ public class DateTimeMapper {
         return LocalDateTime.parse(dateTime, formatter);
     }
 
-    public static String toString(LocalDateTime dateTime) {
+    public static String toTextDateTime(LocalDateTime dateTime) {
         return dateTime.format(formatter);
     }
 }

@@ -28,16 +28,18 @@ public class PublicEventController {
                                          @RequestParam(defaultValue = "0") int from,
                                          @RequestParam(defaultValue = "10") int size,
                                          HttpServletRequest request) {
-        List<EventShortDto> events = eventService.getEvents(
+        List<EventShortDto> events = eventService.get(
                 text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size, request);
         log.info("Получен список событий.");
+
         return events;
     }
 
     @GetMapping("/{id}")
     public EventFullDto getEventById(@PathVariable long id, HttpServletRequest request) {
-        EventFullDto event = eventService.getEventById(id, request);
+        EventFullDto event = eventService.getById(id, request);
         log.info("Получено событие '{}'.", event.getTitle());
+
         return event;
     }
 }

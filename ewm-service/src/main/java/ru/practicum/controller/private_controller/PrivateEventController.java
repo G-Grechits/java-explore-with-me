@@ -19,36 +19,41 @@ public class PrivateEventController {
     @GetMapping
     public List<EventShortDto> getEvents(@PathVariable long userId, @RequestParam(defaultValue = "0") int from,
                                          @RequestParam(defaultValue = "10") int size) {
-        List<EventShortDto> events = eventService.getEvents(userId, from, size);
+        List<EventShortDto> events = eventService.get(userId, from, size);
         log.info("Получен список событий пользователя.");
+
         return events;
     }
 
     @GetMapping("/{eventId}")
     public EventFullDto getEventById(@PathVariable long userId, @PathVariable long eventId) {
-        EventFullDto event = eventService.getEventById(eventId, userId);
+        EventFullDto event = eventService.getById(eventId, userId);
         log.info("Получено событие '{}'.", event.getTitle());
+
         return event;
     }
 
     @PostMapping
     public EventFullDto createEvent(@PathVariable long userId, @RequestBody @Valid NewEventDto eventDto) {
-        EventFullDto createdEvent = eventService.createEvent(userId, eventDto);
+        EventFullDto createdEvent = eventService.create(userId, eventDto);
         log.info("Создано событие '{}'.", createdEvent.getTitle());
+
         return createdEvent;
     }
 
     @PatchMapping
     public EventFullDto updateEvent(@PathVariable long userId, @RequestBody @Valid UpdateEventRequest eventDto) {
-        EventFullDto updatedEvent = eventService.updateEvent(userId, eventDto);
+        EventFullDto updatedEvent = eventService.update(userId, eventDto);
         log.info("Данные события '{}' обновлены.", updatedEvent.getTitle());
+
         return updatedEvent;
     }
 
     @PatchMapping("/{eventId}")
     public EventFullDto cancelEvent(@PathVariable long userId, @PathVariable long eventId) {
-        EventFullDto cancelledEvent = eventService.cancelEvent(eventId, userId);
+        EventFullDto cancelledEvent = eventService.cancel(eventId, userId);
         log.info("Событие '{}' отменено.", cancelledEvent.getTitle());
+
         return cancelledEvent;
     }
 
@@ -56,6 +61,7 @@ public class PrivateEventController {
     public List<ParticipationRequestDto> getEventRequests(@PathVariable long userId, @PathVariable long eventId) {
         List<ParticipationRequestDto> eventRequests = eventService.getEventRequests(eventId, userId);
         log.info("Получен список заявок на участие в событии.");
+
         return eventRequests;
     }
 
@@ -64,6 +70,7 @@ public class PrivateEventController {
                                                   @PathVariable long reqId) {
         ParticipationRequestDto confirmedRequest = eventService.confirmRequest(eventId, userId, reqId);
         log.info("Заявка на участие в событии подтверждена.");
+
         return confirmedRequest;
     }
 
@@ -72,6 +79,7 @@ public class PrivateEventController {
                                                  @PathVariable long reqId) {
         ParticipationRequestDto rejectedRequest = eventService.rejectRequest(eventId, userId, reqId);
         log.info("Заявка на участие в событии отклонена.");
+
         return rejectedRequest;
     }
 }

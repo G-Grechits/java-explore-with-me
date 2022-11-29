@@ -22,24 +22,26 @@ public class AdminUserController {
                                   @RequestParam(defaultValue = "10") int size) {
         List<UserDto> users;
         if (ids == null || ids.isEmpty()) {
-            users = userService.getAllUsers(from, size);
+            users = userService.getAll(from, size);
         } else {
-            users = userService.getUsersByIds(ids);
+            users = userService.getByIds(ids);
         }
         log.info("Получен список пользователей.");
+
         return users;
     }
 
     @PostMapping
     public UserDto createUser(@RequestBody @Valid UserDto userDto) {
-        UserDto createdUser = userService.createUser(userDto);
+        UserDto createdUser = userService.create(userDto);
         log.info("Пользователь {} зарегистрирован.", createdUser.getName());
+
         return createdUser;
     }
 
     @DeleteMapping("/{userId}")
     public void deleteUser(@PathVariable long userId) {
-        userService.deleteUser(userId);
+        userService.delete(userId);
         log.info("Пользователь с ID = {} удалён.", userId);
     }
 }

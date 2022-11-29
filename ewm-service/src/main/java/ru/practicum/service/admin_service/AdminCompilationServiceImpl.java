@@ -8,8 +8,6 @@ import ru.practicum.dto.NewCompilationDto;
 import ru.practicum.entity.Compilation;
 import ru.practicum.entity.Event;
 import ru.practicum.exception.NotFoundException;
-import ru.practicum.mapper.CompilationMapper;
-import ru.practicum.mapper.EventMapper;
 import ru.practicum.repository.CompilationRepository;
 import ru.practicum.repository.EventRepository;
 import ru.practicum.service.EventStatsService;
@@ -17,6 +15,10 @@ import ru.practicum.service.EventStatsService;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static ru.practicum.mapper.CompilationMapper.toCompilation;
+import static ru.practicum.mapper.CompilationMapper.toCompilationDto;
+import static ru.practicum.mapper.EventMapper.toEventShortDto;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +28,7 @@ public class AdminCompilationServiceImpl implements AdminCompilationService {
     private final EventStatsService statsService;
 
     @Override
-    public CompilationDto createCompilation(NewCompilationDto compilationDto) {
+    public CompilationDto create(NewCompilationDto compilationDto) {
         Set<Event> events = new HashSet<>();
         Set<EventShortDto> eventShorts = new HashSet<>();
         if (compilationDto.getEvents() != null && !compilationDto.getEvents().isEmpty()) {
@@ -35,12 +37,13 @@ public class AdminCompilationServiceImpl implements AdminCompilationService {
                     .map(e -> e.orElseThrow(() -> new NotFoundException("Событие не найдено.")))
                     .collect(Collectors.toSet());
             eventShorts = events.stream()
-                    .map(e -> EventMapper.toEventShortDto(
+                    .map(e -> toEventShortDto(
                             e, statsService.getViews(e.getId()), statsService.getConfirmedRequests(e.getId())))
                     .collect(Collectors.toSet());
         }
-        Compilation compilation = CompilationMapper.toCompilation(compilationDto, events);
-        return CompilationMapper.toCompilationDto(compilationRepository.save(compilation), eventShorts);
+        Compilation compilation = compilationRepository.save(toCompilation(compilationDto, events));
+
+        return toCompilationDto(compilation, eventShorts);
     }
 
     @Override
@@ -52,14 +55,14 @@ public class AdminCompilationServiceImpl implements AdminCompilationService {
     }
 
     @Override
-    public void pinCompilation(long id) {
+    public void pin(long id) {
         Compilation compilation = getCompilationFromRepository(id);
         compilation.setPinned(true);
         compilationRepository.save(compilation);
     }
 
     @Override
-    public void unpinCompilation(long id) {
+    public void unpin(long id) {
         Compilation compilation = getCompilationFromRepository(id);
         compilation.setPinned(false);
         compilationRepository.save(compilation);
@@ -74,7 +77,7 @@ public class AdminCompilationServiceImpl implements AdminCompilationService {
     }
 
     @Override
-    public void deleteCompilation(long id) {
+    public void delete(long id) {
         getCompilationFromRepository(id);
         compilationRepository.deleteById(id);
     }

@@ -17,21 +17,23 @@ public class AdminCategoryController {
 
     @PostMapping
     public CategoryDto createCategory(@RequestBody @Valid CategoryDto categoryDto) {
-        CategoryDto createdCategory = categoryService.createCategory(categoryDto);
+        CategoryDto createdCategory = categoryService.create(categoryDto);
         log.info("Создана категория '{}'.", createdCategory.getName());
+
         return createdCategory;
     }
 
     @PatchMapping
     public CategoryDto updateCategory(@RequestBody @Valid CategoryDto categoryDto) {
-        CategoryDto updatedCategory = categoryService.updateCategory(categoryDto);
+        CategoryDto updatedCategory = categoryService.update(categoryDto);
         log.info("Данные категории '{}' обновлены.", updatedCategory.getName());
+
         return updatedCategory;
     }
 
     @DeleteMapping("/{catId}")
     public void deleteCategory(@PathVariable long catId) {
-        categoryService.deleteCategory(catId);
+        categoryService.delete(catId);
         log.info("Категория с ID = {} удалена.", catId);
     }
 }

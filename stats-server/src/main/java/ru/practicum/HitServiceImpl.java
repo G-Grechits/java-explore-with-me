@@ -5,11 +5,13 @@ import org.springframework.stereotype.Service;
 import ru.practicum.dto.EndpointHit;
 import ru.practicum.dto.EventViews;
 import ru.practicum.dto.ViewStats;
-import ru.practicum.mapper.DateTimeMapper;
-import ru.practicum.mapper.HitMapper;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static ru.practicum.mapper.DateTimeMapper.toLocalDateTime;
+import static ru.practicum.mapper.HitMapper.toEndpointHit;
+import static ru.practicum.mapper.HitMapper.toHit;
 
 @Service
 @RequiredArgsConstructor
@@ -18,8 +20,7 @@ public class HitServiceImpl implements HitService {
 
     @Override
     public List<ViewStats> getStats(String start, String end, List<String> uris, Boolean unique) {
-        List<Hit> hits = hitRepository.findAllByTimestampBetweenAndUriIn(DateTimeMapper.toLocalDateTime(start),
-                DateTimeMapper.toLocalDateTime(end), uris);
+        List<Hit> hits = hitRepository.findAllByTimestampBetweenAndUriIn(toLocalDateTime(start), toLocalDateTime(end), uris);
         List<ViewStats> viewStats = new ArrayList<>();
         for (Hit hit : hits) {
             Integer hitCount;
@@ -35,13 +36,15 @@ public class HitServiceImpl implements HitService {
 
     @Override
     public EndpointHit saveStats(EndpointHit endpointHit) {
-        Hit hit = HitMapper.toHit(endpointHit);
-        return HitMapper.toEndpointHit(hitRepository.save(hit));
+        Hit hit = hitRepository.save(toHit(endpointHit));
+
+        return toEndpointHit(hit);
     }
 
     @Override
     public EventViews getEventViews(String start, String end, List<String> uris, Boolean unique) {
         List<ViewStats> viewStats = getStats(start, end, uris, unique);
+
         return new EventViews(viewStats);
     }
 }

@@ -18,15 +18,17 @@ public class PublicCategoryController {
     @GetMapping
     public List<CategoryDto> getAllCategories(@RequestParam(defaultValue = "0") int from,
                                               @RequestParam(defaultValue = "10") int size) {
-        List<CategoryDto> categories = categoryService.getAllCategories(from, size);
+        List<CategoryDto> categories = categoryService.getAll(from, size);
         log.info("Получен список всех категорий.");
+
         return categories;
     }
 
     @GetMapping("/{catId}")
     public CategoryDto getCategoryById(@PathVariable long catId) {
-        CategoryDto category = categoryService.getCategoryById(catId);
+        CategoryDto category = categoryService.getById(catId);
         log.info("Получена категория '{}'.", category.getName());
+
         return category;
     }
 }

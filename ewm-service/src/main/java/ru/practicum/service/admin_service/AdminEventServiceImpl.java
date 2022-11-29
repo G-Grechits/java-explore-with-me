@@ -11,8 +11,6 @@ import ru.practicum.entity.Category;
 import ru.practicum.entity.Event;
 import ru.practicum.exception.NotFoundException;
 import ru.practicum.exception.ValidationException;
-import ru.practicum.mapper.DateTimeMapper;
-import ru.practicum.mapper.EventMapper;
 import ru.practicum.repository.CategoryRepository;
 import ru.practicum.repository.EventRepository;
 import ru.practicum.service.EventStatsService;
@@ -22,6 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ru.practicum.mapper.DateTimeMapper.toLocalDateTime;
+import static ru.practicum.mapper.EventMapper.toEventFullDto;
+
 @Service
 @RequiredArgsConstructor
 public class AdminEventServiceImpl implements AdminEventService {
@@ -30,26 +31,27 @@ public class AdminEventServiceImpl implements AdminEventService {
     private final EventStatsService statsService;
 
     @Override
-    public List<EventFullDto> getEvents(List<Long> users, List<State> states, List<Long> categories, String rangeStart,
-                                        String rangeEnd, int from, int size) {
+    public List<EventFullDto> get(List<Long> users, List<State> states, List<Long> categories, String rangeStart,
+                                  String rangeEnd, int from, int size) {
         Pageable pageable = PageRequest.of(from / size, size);
         List<Event> events = eventRepository.findAllByInitiatorIdInAndStateInAndCategoryIdInAndEventDateBetween(users,
                 states != null ? states : new ArrayList<>(), categories,
-                rangeStart != null ? DateTimeMapper.toLocalDateTime(rangeStart) : null,
-                rangeEnd != null ? DateTimeMapper.toLocalDateTime(rangeEnd) : null, pageable);
+                rangeStart != null ? toLocalDateTime(rangeStart) : null,
+                rangeEnd != null ? toLocalDateTime(rangeEnd) : null, pageable);
+
         return events.stream()
-                .map(e -> EventMapper.toEventFullDto(
+                .map(e -> toEventFullDto(
                         e, statsService.getViews(e.getId()), statsService.getConfirmedRequests(e.getId())))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public EventFullDto updateEvent(long id, AdminUpdateEventRequest event) {
+    public EventFullDto update(long id, AdminUpdateEventRequest event) {
         Event formerEvent = getEventFromRepository(id);
         formerEvent.setTitle(event.getTitle() != null ? event.getTitle() : formerEvent.getTitle());
         formerEvent.setAnnotation(event.getAnnotation() != null ? event.getAnnotation() : formerEvent.getAnnotation());
         formerEvent.setDescription(event.getDescription() != null ? event.getDescription() : formerEvent.getDescription());
-        formerEvent.setEventDate(event.getEventDate() != null ? DateTimeMapper.toLocalDateTime(event.getEventDate())
+        formerEvent.setEventDate(event.getEventDate() != null ? toLocalDateTime(event.getEventDate())
                 : formerEvent.getEventDate());
         formerEvent.setLocation(event.getLocation() != null ? event.getLocation() : formerEvent.getLocation());
         formerEvent.setPaid(event.getPaid() != null ? event.getPaid() : formerEvent.getPaid());
@@ -63,12 +65,13 @@ public class AdminEventServiceImpl implements AdminEventService {
                             String.format("Категория с ID = %d не найдена.", event.getCategory())));
             formerEvent.setCategory(category);
         }
-        return EventMapper.toEventFullDto(
-                eventRepository.save(formerEvent), statsService.getViews(id), statsService.getConfirmedRequests(id));
+        Event updatedEvent = eventRepository.save(formerEvent);
+
+        return toEventFullDto(updatedEvent, statsService.getViews(id), statsService.getConfirmedRequests(id));
     }
 
     @Override
-    public EventFullDto publishEvent(long id) {
+    public EventFullDto publish(long id) {
         Event event = getEventFromRepository(id);
         if (event.getEventDate().minusHours(1).isBefore(LocalDateTime.now())) {
             throw new ValidationException("Дата начала события должна быть не ранее, чем за час от даты публикации.");
@@ -78,19 +81,21 @@ public class AdminEventServiceImpl implements AdminEventService {
         }
         event.setState(State.PUBLISHED);
         event.setPublishedOn(LocalDateTime.now());
-        return EventMapper.toEventFullDto(
-                eventRepository.save(event), statsService.getViews(id), statsService.getConfirmedRequests(id));
+        Event publishedEvent = eventRepository.save(event);
+
+        return toEventFullDto(publishedEvent, statsService.getViews(id), statsService.getConfirmedRequests(id));
     }
 
     @Override
-    public EventFullDto rejectEvent(long id) {
+    public EventFullDto reject(long id) {
         Event event = getEventFromRepository(id);
         if (event.getState().equals(State.PUBLISHED)) {
             throw new ValidationException("Событие уже опубликовано.");
         }
         event.setState(State.CANCELED);
-        return EventMapper.toEventFullDto(
-                eventRepository.save(event), statsService.getViews(id), statsService.getConfirmedRequests(id));
+        Event cancelledEvent = eventRepository.save(event);
+
+        return toEventFullDto(cancelledEvent, statsService.getViews(id), statsService.getConfirmedRequests(id));
     }
 
     private Event getEventFromRepository(long id) {

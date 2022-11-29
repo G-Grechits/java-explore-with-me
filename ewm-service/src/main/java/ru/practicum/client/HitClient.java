@@ -44,6 +44,7 @@ public class HitClient extends BaseClient {
 
     public ResponseEntity<Object> saveStats(EndpointHit endpointHit) {
         String path = "/hit";
+
         return post(path, endpointHit);
     }
 }
