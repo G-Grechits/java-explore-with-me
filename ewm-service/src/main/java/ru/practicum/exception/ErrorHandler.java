@@ -41,22 +41,9 @@ public class ErrorHandler {
                 .build();
     }
 
-    @ExceptionHandler
+    @ExceptionHandler({BadRequestException.class, ValidationException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiError handleValidationException(final ValidationException e) {
-        log.error("Возникла ошибка 400: {}", e.getMessage(), e);
-
-        return ApiError.builder()
-                .message(e.getMessage())
-                .reason("Условия выполнения операции не соблюдены.")
-                .status(HttpStatus.BAD_REQUEST.toString())
-                .timestamp(DateTimeMapper.toTextDateTime(LocalDateTime.now()))
-                .build();
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiError handleBadRequestException(final BadRequestException e) {
+    public ApiError handleBadRequestException(final RuntimeException e) {
         log.error("Возникла ошибка 400: {}", e.getMessage(), e);
 
         return ApiError.builder()
