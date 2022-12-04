@@ -15,35 +15,10 @@ import java.time.LocalDateTime;
 @Slf4j
 public class ErrorHandler {
 
-    @ExceptionHandler
+    @ExceptionHandler({BadRequestException.class, ValidationException.class,
+            MethodArgumentNotValidException.class, MissingServletRequestParameterException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiError handleMissingParameterException(final MissingServletRequestParameterException e) {
-        log.error("Возникла ошибка 400: {}", e.getMessage(), e);
-
-        return ApiError.builder()
-                .message(e.getMessage())
-                .reason("Условия выполнения операции не соблюдены.")
-                .status(HttpStatus.BAD_REQUEST.toString())
-                .timestamp(DateTimeMapper.toTextDateTime(LocalDateTime.now()))
-                .build();
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiError handleArgumentNotValidException(final MethodArgumentNotValidException e) {
-        log.error("Возникла ошибка 400: {}", e.getMessage(), e);
-
-        return ApiError.builder()
-                .message(e.getMessage())
-                .reason("Условия выполнения операции не соблюдены.")
-                .status(HttpStatus.BAD_REQUEST.toString())
-                .timestamp(DateTimeMapper.toTextDateTime(LocalDateTime.now()))
-                .build();
-    }
-
-    @ExceptionHandler({BadRequestException.class, ValidationException.class})
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiError handleBadRequestException(final RuntimeException e) {
+    public ApiError handleBadRequestException(final Exception e) {
         log.error("Возникла ошибка 400: {}", e.getMessage(), e);
 
         return ApiError.builder()
