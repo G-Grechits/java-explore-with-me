@@ -9,14 +9,15 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.practicum.mapper.DateTimeMapper;
 
+import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
 
 @RestControllerAdvice
 @Slf4j
 public class ErrorHandler {
 
-    @ExceptionHandler({BadRequestException.class, ValidationException.class,
-            MethodArgumentNotValidException.class, MissingServletRequestParameterException.class})
+    @ExceptionHandler({BadRequestException.class, ValidationException.class, MethodArgumentNotValidException.class,
+            MissingServletRequestParameterException.class, ConstraintViolationException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiError handleBadRequestException(final Exception e) {
         log.error("Возникла ошибка 400: {}", e.getMessage(), e);

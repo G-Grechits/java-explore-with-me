@@ -2,24 +2,29 @@ package ru.practicum.controller.private_controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.dto.CommentDto;
 import ru.practicum.dto.CommentShortDto;
 import ru.practicum.service.private_service.PrivateCommentService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 @RestController
 @Slf4j
+@Validated
 @RequiredArgsConstructor
 @RequestMapping("/users/{userId}")
 public class PrivateCommentController {
     private final PrivateCommentService commentService;
 
     @GetMapping("/comments")
-    List<CommentShortDto> getByUserId(@PathVariable long userId, @RequestParam(defaultValue = "0") int from,
-                                      @RequestParam(defaultValue = "10") int size) {
+    List<CommentShortDto> getCommentsByUserId(@PathVariable @Positive long userId,
+                                              @RequestParam(defaultValue = "0") @PositiveOrZero int from,
+                                              @RequestParam(defaultValue = "10") @Positive int size) {
         List<CommentShortDto> comments = commentService.getByUserId(userId, from, size);
         log.info("Получен список опубликованных комментариев пользователя с ID = {}.", userId);
 
@@ -27,7 +32,7 @@ public class PrivateCommentController {
     }
 
     @GetMapping("/comments/{commId}")
-    public CommentDto getById(@PathVariable long userId, @PathVariable long commId) {
+    public CommentDto getCommentById(@PathVariable @Positive long userId, @PathVariable @Positive long commId) {
         CommentDto comment = commentService.getById(userId, commId);
         log.info("Получен комментарий '{}'.", comment.getText());
 
@@ -35,7 +40,7 @@ public class PrivateCommentController {
     }
 
     @PostMapping("/events/{eventId}/comments")
-    public CommentDto createComment(@PathVariable long userId, @PathVariable long eventId,
+    public CommentDto createComment(@PathVariable @Positive long userId, @PathVariable @Positive long eventId,
                                     @RequestBody @Valid CommentDto commentDto) {
         CommentDto createdComment = commentService.create(userId, eventId, commentDto);
         log.info("Создан комментарий '{}'.", createdComment.getText());
@@ -44,7 +49,7 @@ public class PrivateCommentController {
     }
 
     @PatchMapping("/events/{eventId}/comments")
-    public CommentDto updateComment(@PathVariable long userId, @PathVariable long eventId,
+    public CommentDto updateComment(@PathVariable @Positive long userId, @PathVariable @Positive long eventId,
                                     @RequestBody @Valid CommentDto commentDto) {
         CommentDto updatedComment = commentService.update(userId, eventId, commentDto);
         log.info("Данные комментария '{}' обновлены.", updatedComment.getText());
@@ -53,7 +58,7 @@ public class PrivateCommentController {
     }
 
     @DeleteMapping("/comments/{commId}")
-    public void deleteComment(@PathVariable long userId, @PathVariable long commId) {
+    public void deleteComment(@PathVariable @Positive long userId, @PathVariable @Positive long commId) {
         commentService.delete(userId, commId);
         log.info("Комментарий с ID = {} удалён.", commId);
     }
